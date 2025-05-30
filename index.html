@@ -1,14 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Print Shop Order Tracker</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="manifest" href="manifest.json" />
-</head>
-<body>
-  <h1>Print Shop Order Tracker</h1>
-  <script src="js/app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Print Shop Order Tracker</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <h1>New Order</h1>
+    <form id="orderForm">
+      <label>Customer Name:
+        <input type="text" name="customerName" required>
+      </label><br>
+
+      <label>Phone:
+        <input type="tel" name="phone" required>
+      </label><br>
+
+      <label>Email:
+        <input type="email" name="email">
+      </label><br>
+
+      <label>Address:
+        <input type="text" name="address">
+      </label><br>
+
+      <label>Order Type:
+        <input type="text" name="orderType" required>
+      </label><br>
+
+      <label>Description:
+        <textarea name="description" rows="3"></textarea>
+      </label><br>
+
+      <label>Down Payment:
+        <input type="number" name="downPayment" step="0.01">
+      </label><br>
+
+      <label>Balance Due:
+        <input type="number" name="balanceDue" step="0.01">
+      </label><br>
+
+      <label>Order Date:
+        <input type="date" name="orderDate" required>
+      </label><br>
+
+      <label>Design Date:
+        <input type="date" name="designDate">
+      </label><br>
+
+      <label>Notes:
+        <textarea name="notes" rows="2"></textarea>
+      </label><br>
+
+      <label>Upload Images:
+        <input type="file" name="images" multiple>
+      </label><br><br>
+
+      <button type="submit">Save Order</button>
+    </form>
+
+      <script src="js/app.js"></script>
+  </body>
 </html>
