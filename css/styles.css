@@ -2,19 +2,133 @@ body {
   font-family: sans-serif;
   background-color: #fff;
   padding: 1rem;
-  max-width: 600px;
-  margin: auto;
+  height: 100vh;
+  width: calc(100vw - 60px);
+  margin: 0;
+  overflow: hidden;
 }
-
+html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
 form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
-
 input, textarea, button {
   padding: 0.5rem;
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
+}
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  width: 100%;
+  cursor: pointer;
+}
+main {
+  max-width: 600px;
+  margin: auto;
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+nav button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#kanbanBoard {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  background-color: #dadada;
+  border-top: 1px solid #ccc;
+  padding: 1rem;
+  width: calc(100vw - 60px);
+  height: calc(100vh - 90px); /* Add this line to make it full screen height */
+  box-sizing: border-box; /* Ensures padding doesn't overflow height */
+}
+.kanban-column {
+  flex: 1;
+  min-width: 200px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 0;
+  padding-top: 0;
+  border-radius: 8px;
+  flex-shrink: 0;
+  height: 100%; /* Makes sure it fills the parent's height */
+  overflow-y: auto; /* Enables vertical scroll within the column if needed */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.kanban-header {
+  background-color: #cce5ff; /* light blue or any color you like */
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* optional for style */
+}
+.kanban-column h3 {
+  font-size: 1rem;
+  margin: 0;
+  flex-shrink: 0;
+}
+.kanban-column.order-placed .kanban-header {
+  background-color: #fce4ec; /* light pink */
+}
+
+.kanban-column.design .kanban-header {
+  background-color: #e3f2fd; /* light blue */
+}
+
+.kanban-column.waiting-for-approval .kanban-header {
+  background-color: #fff3e0; /* light orange */
+}
+
+.kanban-column.approved .kanban-header {
+  background-color: #e8f5e9; /* light green */
+}
+
+.kanban-column.printing .kanban-header {
+  background-color: #ede7f6; /* light purple */
+}
+
+.kanban-column.ready-for-pickup .kanban-header {
+  background-color: #f3e5f5; /* lavender */
+}
+
+.kanban-column.completed .kanban-header {
+  background-color: #c8e6c9; /* brighter green */
+}
+
+.order-card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.order-card:hover {
+  background-color: #f0f8ff;
+  cursor: pointer;
 }
