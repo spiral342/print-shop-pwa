@@ -1,30 +1,62 @@
-body {
-  font-family: sans-serif;
-  background-color: #fff;
-  padding: 1rem;
-  height: 100vh;
-  width: calc(100vw - 60px);
-  margin: 0;
-  overflow: hidden;
-}
-html {
+/* == Layout Reset & Base == */
+html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  font-family: sans-serif;
+  background-color: #fff;
+  box-sizing: border-box;
 }
+
+body {
+  padding: 1rem;
+  width: calc(100vw - 60px);
+}
+
+main {
+  max-width: 600px;
+  margin: auto;
+}
+
+/* == Navigation == */
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+nav button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* == Form View == */
+#formView {
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
 form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 input, textarea, button {
   padding: 0.5rem;
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
 }
+
 button[type="submit"] {
   background-color: #007bff;
   color: white;
@@ -36,24 +68,8 @@ button[type="submit"] {
   width: 100%;
   cursor: pointer;
 }
-main {
-  max-width: 600px;
-  margin: auto;
-}
-nav {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 1rem;
-}
-nav button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
+
+/* == Kanban View == */
 #kanbanBoard {
   display: flex;
   overflow-x: auto;
@@ -62,64 +78,49 @@ nav button {
   border-top: 1px solid #ccc;
   padding: 1rem;
   width: calc(100vw - 60px);
-  height: calc(100vh - 90px); /* Add this line to make it full screen height */
-  box-sizing: border-box; /* Ensures padding doesn't overflow height */
+  height: calc(100vh - 90px);
+  box-sizing: border-box;
 }
+
 .kanban-column {
   flex: 1;
   min-width: 200px;
   background: #f9f9f9;
   border: 1px solid #ccc;
   padding: 0;
-  padding-top: 0;
   border-radius: 8px;
   flex-shrink: 0;
-  height: 100%; /* Makes sure it fills the parent's height */
-  overflow-y: auto; /* Enables vertical scroll within the column if needed */
-  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
+
 .kanban-header {
-  background-color: #cce5ff; /* light blue or any color you like */
+  background-color: #cce5ff;
   padding: 0.5rem;
   border-radius: 4px;
   margin-bottom: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* optional for style */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
+
 .kanban-column h3 {
   font-size: 1rem;
   margin: 0;
   flex-shrink: 0;
 }
-.kanban-column.order-placed .kanban-header {
-  background-color: #fce4ec; /* light pink */
-}
 
-.kanban-column.design .kanban-header {
-  background-color: #e3f2fd; /* light blue */
-}
+/* == Kanban Status Colors == */
+.kanban-column.order-placed .kanban-header { background-color: #fce4ec; }
+.kanban-column.design .kanban-header { background-color: #e3f2fd; }
+.kanban-column.waiting-for-approval .kanban-header { background-color: #fff3e0; }
+.kanban-column.approved .kanban-header { background-color: #e8f5e9; }
+.kanban-column.printing .kanban-header { background-color: #ede7f6; }
+.kanban-column.ready-for-pickup .kanban-header { background-color: #f3e5f5; }
+.kanban-column.completed .kanban-header { background-color: #c8e6c9; }
 
-.kanban-column.waiting-for-approval .kanban-header {
-  background-color: #fff3e0; /* light orange */
-}
-
-.kanban-column.approved .kanban-header {
-  background-color: #e8f5e9; /* light green */
-}
-
-.kanban-column.printing .kanban-header {
-  background-color: #ede7f6; /* light purple */
-}
-
-.kanban-column.ready-for-pickup .kanban-header {
-  background-color: #f3e5f5; /* lavender */
-}
-
-.kanban-column.completed .kanban-header {
-  background-color: #c8e6c9; /* brighter green */
-}
-
+/* == Order Cards == */
 .order-card {
   background: white;
   border: 1px solid #ddd;
@@ -127,8 +128,67 @@ nav button {
   margin-bottom: 0.5rem;
   border-radius: 6px;
   font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
+
 .order-card:hover {
-  background-color: #f0f8ff;
+  background-color: #e0f0ff;
+}
+
+/* == Modal == */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#editOrderBtn {
+  background-color: #007bff;
+  color: white;
+}
+
+#deleteOrderBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.5rem;
   cursor: pointer;
 }

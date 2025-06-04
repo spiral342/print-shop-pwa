@@ -8,11 +8,10 @@
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
-
     <!-- Navigation (always visible) -->
     <nav>
-      <button onclick="showKanban()">📦 Orders</button>
-      <button onclick="showForm()">➕ New Order</button>
+      <button type="button" onclick="showKanban()">📦 Orders</button>
+      <button type="button" onclick="showForm()">➕ New Order</button>
     </nav>
 
     <!-- Kanban View (default visible) -->
@@ -23,7 +22,7 @@
     <!-- New Order Form (hidden initially) -->
     <section id="formView" style="display: none;">
       <main>
-        <h1>New Order</h1>
+        <h1 id="formTitle">New Order</h1>
         <form id="orderForm">
           <label>Customer Name:
             <input type="text" name="customerName" required>
@@ -53,8 +52,8 @@
             <input type="number" name="downPayment" step="0.01">
           </label><br>
 
-          <label>Balance Due:
-            <input type="number" name="balanceDue" step="0.01">
+          <label>Total Price:
+            <input type="number" name="totalPrice" step="0.01">
           </label><br>
 
           <label>Order Date:
@@ -77,6 +76,21 @@
         </form>
       </main>
     </section>
+
+    <!-- Order Detail Modal -->
+    <div id="orderDetailModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span id="closeDetail" class="close">&times;</span>
+        
+        <div id="orderDetailContent"></div>
+
+        <div class="modal-actions">
+          <button id="editOrderBtn">Edit</button>
+          <button id="deleteOrderBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+
 
     <script src="js/app.js"></script>
   </body>
