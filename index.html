@@ -8,11 +8,25 @@
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
-    <!-- Navigation (always visible) -->
-    <nav>
-      <button type="button" onclick="showKanban()">📦 Orders</button>
-      <button type="button" onclick="showForm()">➕ New Order</button>
-    </nav>
+    <!-- Menu Toggle Button -->
+    <div id="menuToggle" class="menu-toggle">☰ Menu</div>
+
+    <!-- Side Menu -->
+    <div id="sideMenu" class="hidden side-menu">
+      <button onclick="showKanban()">📦 Orders</button>
+      <button onclick="showForm()">➕ New Order</button>
+      <button onclick="toggleTrash()">🗑️ Trash</button>
+    </div>
+
+    <div id="undoBanner" class="undo-banner hidden">
+      Order deleted. 
+      <button id="undoButton">Undo</button>
+    </div>
+
+    <section id="trashView" class="hidden">
+      <h3>Trash</h3>
+      <div id="trashBoard"></div>
+    </section>
 
     <!-- Kanban View (default visible) -->
     <section id="kanbanView">

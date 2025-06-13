@@ -192,3 +192,82 @@ button[type="submit"] {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+.deleted {
+  background-color: #ffe5e5;
+  border-left: 4px solid red;
+  opacity: 0.8;
+}
+.sync-label {
+  font-size: 0.8rem;
+  color: red;
+  font-weight: bold;
+  display: block;
+  margin-top: 4px;
+}
+
+.undo-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.undo-banner button {
+  background: #ffaaaa;
+  border: none;
+  color: black;
+  font-weight: bold;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.menu-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  z-index: 100;
+}
+
+.side-menu {
+  position: fixed;
+  top: 60px;
+  left: 10px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 101;
+}
+
+.side-menu button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}

@@ -7,6 +7,14 @@ const orderDetailContent = document.getElementById("orderDetailContent");
 const editOrderBtn = document.getElementById("editOrderBtn");
 const closeDetail = document.getElementById("closeDetail");
 
+const menuToggle = document.getElementById("menuToggle");
+const sideMenu = document.getElementById("sideMenu");
+
+menuToggle.addEventListener("click", () => {
+  sideMenu.classList.toggle("hidden");
+});
+
+
 // == Constants ==
 const statuses = [
   "Order Placed",
@@ -19,6 +27,9 @@ const statuses = [
 ];
 
 // == Helpers ==
+function hideMenu() {
+  document.getElementById("sideMenu").classList.add("hidden");
+}
 function generateId() {
   return Math.floor(10000 + Math.random() * 90000);
 }
@@ -50,11 +61,34 @@ function renderOrderDetails(order) {
 function showKanban() {
   kanbanView.style.display = "flex";
   formView.style.display = "none";
+  trashView.classList.add("hidden");
 }
 
 function showForm() {
-  formView.style.display = "block";
   kanbanView.style.display = "none";
+  formView.style.display = "block";
+  trashView.classList.add("hidden");
+}
+function showUndoBanner(orderId) {
+  const banner = document.getElementById("undoBanner");
+  const undoBtn = document.getElementById("undoButton");
+
+  banner.classList.remove("hidden");
+
+  const timeout = setTimeout(() => {
+    banner.classList.add("hidden");
+  }, 5000);
+
+  undoBtn.onclick = () => {
+    clearTimeout(timeout);
+    const order = OrderManager.orders.find(o => o.id === orderId);
+    if (!order) return;
+    delete order.deletedAt;
+    delete order.syncStatus;
+    OrderManager.save();
+    OrderManager.renderKanban();
+    banner.classList.add("hidden");
+  };
 }
 
 // == Order Manager ==
@@ -82,31 +116,99 @@ const OrderManager = {
     }
   },
 
+  renderTrash() {
+    const trashBoard = document.getElementById("trashBoard");
+    trashBoard.innerHTML = "";
+  
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+  
+    const trashedOrders = this.orders.filter(order => {
+      if (!order.deletedAt) return false;
+  
+      const timeSinceDelete = now - order.deletedAt;
+      return timeSinceDelete <= oneDay; // only show if within 1 day
+    });
+  
+    trashedOrders.forEach(order => {
+      const card = document.createElement("div");
+      card.className = "order-card deleted";
+      card.innerHTML = `
+        <strong>${order.id}</strong><br>
+        ${order.customerName}<br>
+        ${order.orderType}<br>
+        <span class="sync-label">🗑️ Deleted</span>
+      `;
+      card.setAttribute("data-id", order.id);
+      card.addEventListener("click", handleCardClick);
+      trashBoard.appendChild(card);
+    });
+  
+    if (trashedOrders.length === 0) {
+      trashBoard.innerHTML = "<p>No recently deleted orders.</p>";
+    }
+  },
+
+  cleanupOldDeleted() {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+  
+    this.orders = this.orders.filter(order => {
+      if (!order.deletedAt) return true;
+      return now - order.deletedAt <= oneDay;
+    });
+  
+    this.save();
+  },
+
   renderKanban() {
     const board = document.getElementById("kanbanBoard");
     board.innerHTML = "";
-
+  
     statuses.forEach(status => {
       const column = document.createElement("div");
       column.className = "kanban-column";
       const statusClass = status.toLowerCase().replace(/\s+/g, "-");
       column.classList.add(statusClass);
-
+  
       column.innerHTML = `<div class="kanban-header"><h3>${status}</h3></div>`;
-
-      const filteredOrders = this.orders.filter(o => o.status === status);
+  
+      const filteredOrders = this.orders.filter(o => {
+        // Must match this column's status
+        if (o.status !== status) return false;
+      
+        // If soft-deleted, check how long ago
+        if (o.deletedAt) {
+          const oneDay = 24 * 60 * 60 * 1000;
+          const timeSinceDelete = Date.now() - o.deletedAt;
+      
+          // If deleted more than 1 day ago, hide it
+          if (timeSinceDelete > oneDay) return false;
+        }
+      
+        return true;
+      });
       filteredOrders.forEach(order => {
         const card = document.createElement("div");
         card.className = "order-card";
-        card.innerHTML = `<strong>${order.id}</strong><br>${order.customerName}<br>${order.orderType}`;
+  
+        // 🔴 Add this: flag deleted cards
+        if (order.deletedAt) {
+          card.classList.add("deleted");
+          card.innerHTML = `<strong>${order.id}</strong><br>${order.customerName}<br>${order.orderType}<br><span class="sync-label">🗑️ Sync: Deleted</span>`;
+        } else {
+          card.innerHTML = `<strong>${order.id}</strong><br>${order.customerName}<br>${order.orderType}`;
+        }
+  
         card.setAttribute("data-id", order.id);
         card.addEventListener("click", handleCardClick);
         column.appendChild(card);
       });
-
+  
       board.appendChild(column);
     });
   }
+  
 };
 
 let editOrderId = null;
@@ -115,10 +217,19 @@ function handleCardClick(e) {
   const id = e.currentTarget.getAttribute("data-id");
   const order = OrderManager.getById(id);
   if (!order) return;
+
   orderDetailContent.innerHTML = renderOrderDetails(order);
   editOrderId = order.id;
   orderDetailModal.style.display = "flex";
+
+  // 🔄 Change delete button text to "Recover" if already deleted
+  if (order.deletedAt) {
+    deleteOrderBtn.textContent = "Recover";
+  } else {
+    deleteOrderBtn.textContent = "Delete";
+  }
 }
+
 
 function handleFormSubmit(e) {
   e.preventDefault();
@@ -154,33 +265,60 @@ function handleFormSubmit(e) {
   alert(editOrderId ? "Order updated!" : "New order saved!");
 }
 
+  // Trash toggle
+  function toggleTrash() {
+    kanbanView.style.display = "none";
+    formView.style.display = "none";
+    trashView.classList.toggle("hidden");
+    OrderManager.renderTrash();
+    hideMenu();
+  }
+  
 // == Event Listeners ==
 document.addEventListener("DOMContentLoaded", () => {
+  // Auto-cleanup deleted orders
+  OrderManager.cleanupOldDeleted();
+
+  // Initial render
   OrderManager.renderKanban();
+
+  // Form submission
   orderForm.addEventListener("submit", handleFormSubmit);
 
+  // Modal close
   closeDetail.addEventListener("click", () => {
     orderDetailModal.style.display = "none";
-  });
+  });  
+
+  // Delete or recover
   deleteOrderBtn.addEventListener("click", () => {
     if (!editOrderId) return;
-    const confirmDelete = confirm("Are you sure you want to delete this order?");
-    if (!confirmDelete) return;
 
-    OrderManager.orders = OrderManager.orders.filter(o => o.id !== editOrderId);
+    const order = OrderManager.orders.find(o => o.id === editOrderId);
+    if (!order) return;
+
+    if (order.deletedAt) {
+      delete order.deletedAt;
+      delete order.syncStatus;
+    } else {
+      order.deletedAt = Date.now();
+      order.syncStatus = 'deleted';
+      showUndoBanner(editOrderId);
+    }
+
     OrderManager.save();
     OrderManager.renderKanban();
-
     orderDetailModal.style.display = "none";
     editOrderId = null;
   });
+
+  // Edit button
   editOrderBtn.addEventListener("click", () => {
     if (!editOrderId) return;
-  
     const order = OrderManager.getById(editOrderId);
     if (!order) return;
-  
-    // Fill the form with order data
+
+    // Fill form
     orderForm.customerName.value = order.customerName;
     orderForm.phone.value = order.phone;
     orderForm.email.value = order.email;
@@ -194,12 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
     orderForm.notes.value = order.notes;
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-  
-    // Update the form title
     document.getElementById("formTitle").textContent = "Edit Order";
-  
-    // Hide modal and show form
     orderDetailModal.style.display = "none";
     showForm();
-  });  
+  });
 });
