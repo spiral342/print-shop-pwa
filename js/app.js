@@ -99,6 +99,22 @@ const OrderManager = {
     localStorage.setItem("orders", JSON.stringify(this.orders));
   },
 
+  recoverOrder(orderId) {
+    const order = this.orders.find(o => o.id === orderId);
+    if (!order) return;
+  
+    delete order.deletedAt;
+    delete order.syncStatus;
+  
+    this.save();
+    this.renderKanban();
+    this.renderTrash();
+  
+    // Optional: Close detail modal if it’s open and recovering from there
+    orderDetailModal.style.display = "none";
+    editOrderId = null;
+  },  
+
   getById(id) {
     return this.orders.find(o => o.id == id);
   },
@@ -122,12 +138,12 @@ const OrderManager = {
   
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
   
     const trashedOrders = this.orders.filter(order => {
       if (!order.deletedAt) return false;
-  
       const timeSinceDelete = now - order.deletedAt;
-      return timeSinceDelete <= oneDay; // only show if within 1 day
+      return timeSinceDelete <= thirtyDays;
     });
   
     trashedOrders.forEach(order => {
@@ -137,17 +153,29 @@ const OrderManager = {
         <strong>${order.id}</strong><br>
         ${order.customerName}<br>
         ${order.orderType}<br>
-        <span class="sync-label">🗑️ Deleted</span>
+        <span class="sync-label">🗑️ Deleted</span><br>
+        <button class="recover-btn">Recover</button>
       `;
       card.setAttribute("data-id", order.id);
+  
+      // Open expanded card on card click
       card.addEventListener("click", handleCardClick);
+  
+      // Prevent Recover button from opening modal
+      const recoverBtn = card.querySelector(".recover-btn");
+      recoverBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // prevent card click
+        this.recoverOrder(order.id); // you'll define this method next
+      });
+  
       trashBoard.appendChild(card);
     });
   
     if (trashedOrders.length === 0) {
-      trashBoard.innerHTML = "<p>No recently deleted orders.</p>";
+      trashBoard.innerHTML = "<p>No deleted orders.</p>";
     }
-  },
+  }
+  ,
 
   cleanupOldDeleted() {
     const oneDay = 24 * 60 * 60 * 1000;
@@ -267,15 +295,50 @@ function handleFormSubmit(e) {
 
   // Trash toggle
   function toggleTrash() {
+    const isHidden = trashView.classList.contains("hidden");
+  
+    // Hide all views first
     kanbanView.style.display = "none";
     formView.style.display = "none";
-    trashView.classList.toggle("hidden");
-    OrderManager.renderTrash();
+    trashView.classList.add("hidden");
+  
+    // If it was hidden, show Trash; otherwise go back to Kanban
+    if (isHidden) {
+      trashView.classList.remove("hidden");
+      OrderManager.renderTrash();
+    } else {
+      showKanban();
+    }
+  
     hideMenu();
   }
   
+  
 // == Event Listeners ==
 document.addEventListener("DOMContentLoaded", () => {
+  const themeToggleBtn = document.getElementById("toggleThemeBtn");
+
+// Set initial theme from saved preference
+if (localStorage.getItem("theme") === "dark") {
+  document.documentElement.setAttribute("data-theme", "dark");
+  themeToggleBtn.textContent = "☀️ Light Mode";
+} else {
+  themeToggleBtn.textContent = "🌙 Dark Mode";
+}
+
+themeToggleBtn.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  if (current === "dark") {
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("theme", "light");
+    themeToggleBtn.textContent = "🌙 Dark Mode";
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+    themeToggleBtn.textContent = "☀️ Light Mode";
+  }
+});
+
   // Auto-cleanup deleted orders
   OrderManager.cleanupOldDeleted();
 

@@ -5,9 +5,9 @@ html, body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  font-family: sans-serif;
-  background-color: #fff;
-  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);  
 }
 
 body {
@@ -30,11 +30,23 @@ nav {
 nav button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   border: none;
-  background-color: #007bff;
+  background-color: #007AFF;
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+nav button:hover {
+  background-color: #005FCC;  /* Slightly darker on hover */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+nav button:active {
+  background-color: #004EA1;
 }
 
 /* == Form View == */
@@ -53,29 +65,43 @@ form {
 input, textarea, button {
   padding: 0.5rem;
   font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   width: 100%;
   box-sizing: border-box;
 }
 
 button[type="submit"] {
-  background-color: #007bff;
+  background-color: #007AFF;        /* Apple system blue */
   color: white;
   border: none;
   padding: 0.75rem;
   font-size: 1rem;
-  border-radius: 6px;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.02em;
+  border-radius: 10px;
   margin-top: 1rem;
   width: 100%;
   cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+button[type="submit"]:hover {
+  background-color: #005FCC;        /* Slightly darker on hover */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+button[type="submit"]:active {
+  background-color: #004EA1;        /* Pressed state */
+}
+
 
 /* == Kanban View == */
 #kanbanBoard {
   display: flex;
   overflow-x: auto;
   gap: 1rem;
-  background-color: #dadada;
-  border-top: 1px solid #ccc;
+  background-color: var(--bg);  /* Apple-light background */
   padding: 1rem;
   width: calc(100vw - 60px);
   height: calc(100vh - 90px);
@@ -84,56 +110,102 @@ button[type="submit"] {
 
 .kanban-column {
   flex: 1;
-  min-width: 200px;
-  background: #f9f9f9;
-  border: 1px solid #ccc;
+  min-width: 220px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);  
   padding: 0;
-  border-radius: 8px;
+  border-radius: 12px;
   flex-shrink: 0;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); /* Subtle Apple-like depth */
 }
 
 .kanban-header {
-  background-color: #cce5ff;
-  padding: 0.5rem;
-  border-radius: 4px;
+  background-color: var(--hover-bg);
+  color: var(--text);  
+  padding: 0.75rem;
+  border-radius: 12px 12px 0 0;
   margin-bottom: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .kanban-column h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 1rem;
   margin: 0;
   flex-shrink: 0;
 }
 
 /* == Kanban Status Colors == */
-.kanban-column.order-placed .kanban-header { background-color: #fce4ec; }
-.kanban-column.design .kanban-header { background-color: #e3f2fd; }
-.kanban-column.waiting-for-approval .kanban-header { background-color: #fff3e0; }
-.kanban-column.approved .kanban-header { background-color: #e8f5e9; }
-.kanban-column.printing .kanban-header { background-color: #ede7f6; }
-.kanban-column.ready-for-pickup .kanban-header { background-color: #f3e5f5; }
-.kanban-column.completed .kanban-header { background-color: #c8e6c9; }
+.kanban-column.order-placed .kanban-header { background-color: #FCEFF8; }
+.kanban-column.design .kanban-header { background-color: #EEF6FC; }
+.kanban-column.waiting-for-approval .kanban-header { background-color: #FFF7E6; }
+.kanban-column.approved .kanban-header { background-color: #ECFDF3; }
+.kanban-column.printing .kanban-header { background-color: #F4F0FA; }
+.kanban-column.ready-for-pickup .kanban-header { background-color: #F9F0FC; }
+.kanban-column.completed .kanban-header { background-color: #E6F5EA; }
+[data-theme="dark"] .kanban-column.order-placed .kanban-header {
+  background-color: #5C3E4B; /* muted berry */
+}
+
+[data-theme="dark"] .kanban-column.design .kanban-header {
+  background-color: #2C3E50; /* steel blue */
+}
+
+[data-theme="dark"] .kanban-column.waiting-for-approval .kanban-header {
+  background-color: #4E4327; /* warm sand brown */
+}
+
+[data-theme="dark"] .kanban-column.approved .kanban-header {
+  background-color: #2F4F3E; /* forest green */
+}
+
+[data-theme="dark"] .kanban-column.printing .kanban-header {
+  background-color: #44355B; /* deep violet */
+}
+
+[data-theme="dark"] .kanban-column.ready-for-pickup .kanban-header {
+  background-color: #4B3A55; /* plum purple */
+}
+
+[data-theme="dark"] .kanban-column.completed .kanban-header {
+  background-color: #2F4D3F; /* soft pine green */
+}
+
+
 
 /* == Order Cards == */
 .order-card {
-  background: white;
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  background-color: var(--card-bg-strong, #FFFFFF);
+  border: 1px solid var(--border);
+  color: var(--text);  
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .order-card:hover {
-  background-color: #e0f0ff;
+  background-color: var(--hover-bg); /* Uses appropriate gray per theme */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); /* Slightly deeper in dark mode */
+}
+
+.order-card strong {
+  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #007AFF; /* Blue ID or title */
 }
 
 /* == Modal == */
@@ -143,46 +215,72 @@ button[type="submit"] {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(28, 28, 30, 0.4); /* Softer dark overlay */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px); /* Optional: adds polish */
 }
 
 .modal-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text);  
+  padding: 2rem;
+  border-radius: 16px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  max-width: 480px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   position: relative;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
 }
 
 .modal-actions button {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
   font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #editOrderBtn {
-  background-color: #007bff;
+  background-color: #007AFF; /* Apple Blue */
   color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#editOrderBtn:hover {
+  background-color: #005FCC;
 }
 
 #deleteOrderBtn {
-  background-color: #dc3545;
+  background-color: #FF3B30; /* Apple Red */
   color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#deleteOrderBtn:hover {
+  background-color: #D93025;
 }
 
 .close {
@@ -190,19 +288,33 @@ button[type="submit"] {
   top: 8px;
   right: 12px;
   font-size: 1.5rem;
+  font-weight: 400;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  opacity: 0.6;  
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close:hover {
+  color: #1C1C1E;
 }
 
 .deleted {
-  background-color: #ffe5e5;
-  border-left: 4px solid red;
-  opacity: 0.8;
+  background-color: #FFF5F5;       /* Soft red tint */
+  border-left: 4px solid #FF3B30;  /* Apple red */
+  opacity: 1;
 }
+
 .sync-label {
   font-size: 0.8rem;
-  color: red;
-  font-weight: bold;
-  display: block;
+  color: #FF3B30;     /* Apple red */
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #FFEFEF;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
   margin-top: 4px;
 }
 
@@ -211,25 +323,46 @@ button[type="submit"] {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: #333;
+  background: #1C1C1E; /* Apple system black */
   color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  gap: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  animation: fadeInSlideUp 0.3s ease-out;
+}
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .undo-banner button {
-  background: #ffaaaa;
+  background-color: #34C759; /* Apple system green */
   border: none;
-  color: black;
-  font-weight: bold;
-  padding: 5px 10px;
+  color: white;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.undo-banner button:hover {
+  background-color: #28A745;
 }
 
 .hidden {
@@ -240,34 +373,151 @@ button[type="submit"] {
   position: fixed;
   top: 10px;
   left: 10px;
-  background: white;
+  background: var(--card-bg);
+  border: 1px solid var(--border);   
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   z-index: 100;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.menu-toggle:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .side-menu {
   position: fixed;
   top: 60px;
   left: 10px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);  
+  border-radius: 16px;
+  padding: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   z-index: 101;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .side-menu button {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   border: none;
-  background-color: #007bff;
+  background-color: var(--blue);
   color: white;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
   text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.side-menu button:hover {
+  filter: brightness(0.9); /* Works for both light/dark themes */
+}
+
+#trashBoard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg);
+}
+
+.order-card.deleted {
+  background-color: var(--deleted-bg, #FFF5F5); /* fallback just in case */
+  border: 1px solid var(--red);
+  padding: 1rem;
+  border-radius: 12px;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+  position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+.order-card.deleted:hover {
+  background-color: #ffecec; /* subtle lighter red for hover */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+[data-theme="dark"] .order-card.deleted:hover {
+  background-color: #4d2a2a; /* soft muted red */
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.08);
+}
+
+
+.recover-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+  background-color: #34C759; /* Apple system green */
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recover-btn:hover {
+  background-color: #28A745;
+}
+
+input, textarea {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);  
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0.5rem;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--blue);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.3); /* slightly higher contrast, OK for both modes */
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.3); /* Neutral gray that works for both themes */
+  border-radius: 8px;
+}
+
+:root {
+  --bg: #F9F9F9;
+  --text: #1C1C1E;
+  --card-bg: #FFFFFF;
+  --border: #E5E5EA;
+  --blue: #007AFF;
+  --red: #FF3B30;
+  --green: #34C759;
+  --hover-bg: #F2F2F7;
+  --deleted-bg: #FFF5F5;
+  --card-bg-strong: #FFFFFF;
+}
+
+[data-theme="dark"] {
+  --bg: #1C1C1E;
+  --text: #FFFFFF;
+  --card-bg: #2C2C2E;
+  --border: #3A3A3C;
+  --blue: #0A84FF;
+  --red: #FF453A;
+  --green: #30D158;
+  --hover-bg: #3A3A3C;
+  --deleted-bg: #3A1C1C; /* or another soft dark-red tint that feels 'deleted' */
+  --card-bg-strong: #1C1C1E; /* optional: make it slightly lighter for contrast, e.g. #333 or #38383A */
+
 }
